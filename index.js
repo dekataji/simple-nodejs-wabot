@@ -23,13 +23,13 @@ Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perinta
         client.sendText(message.from, `*Apa itu Catat Meter Mandiri?*
 _Catat Meter Mandiri adalah kegiatan pelaporan foto meter yang dilakukan pelanggan setiap bulan._
 Periode pencatatan adalah di *tanggal 1 s.d.  20 setiap bulannya*.
-        `)
+        `);
         client.sendText(message.from, `*Kemana dan bagaimana cara pengiriman foto untuk catat meter?*
 _Foto meter dapat dikirimkan ke nomor WA terpusat *083820341177*_
 Pada caption foto tuliskan: _(ID Reff Pelanggan)_#_(Angka Meter)_
 Contoh : *018123456#0000*
-        `)
-        client.sendContact(message.from, 6283820341177@c.us);
+        `);
+        client.sendContact(message.from, '6283820341177@c.us');
         
         break;
 
@@ -65,3 +65,7 @@ Contoh : *018123456#0000*
       }
   });
 }
+
+[`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
+  process.on(eventType, cleanUpServer.bind(null, eventType));
+})
