@@ -20,7 +20,16 @@ Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perinta
         1. *Pencatatan meter oleh petugas yang dilakukan 3 bulan sekali.* Setiap wilayah di Area Lampung memiliki  jadwal catat meter yang berbeda beda beda.
         2. *Catat Meter Mandiri* yang dilakukan oleh pelanggan setiap bulan.
         `);
-
+        client.sendText(message.from, `*Apa itu Catat Meter Mandiri?*
+_Catat Meter Mandiri adalah kegiatan pelaporan foto meter yang dilakukan pelanggan setiap bulan._
+Periode pencatatan adalah di *tanggal 1 s.d.  20 setiap bulannya*.
+        `)
+        client.sendText(message.from, `*Kemana dan bagaimana cara pengiriman foto untuk catat meter?*
+_Foto meter dapat dikirimkan ke nomor WA terpusat *083820341177*_
+Pada caption foto tuliskan: _(ID Reff Pelanggan)_#_(Angka Meter)_
+Contoh : *018123456#0000*
+        `)
+        client.sendContact(message.from, 6283820341177@c.us);
         
         break;
 
