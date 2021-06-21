@@ -6,7 +6,6 @@ var fork = require('child_process').fork;
 
 
 //TODO:
-//command dibikin pake nomor
 //filter pesan CMM
 
 
@@ -19,26 +18,14 @@ function start(client) {
   client.onMessage(async message => {
     if(chatSessions.includes(message.from) == false){
       client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan Anda menjadi pelanggan setia PGN.
-Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
-ℹ️ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
-ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
-ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
-
-🤔 *!TagihanNaik*  -> Kenapa tagihan gas sekarang naik?
-🤔 *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-🤔 *!UntukApa* -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-🤔 *!Berapa* -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-🤔 *!Manfaat*  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
-
-*_Untuk pertanyaan dan keluhan lainnya silahkan menghubungi contact center PGN di 1500-645_*
-
-📋 *!Menu* -> Menampilkan list perintah ini kembali
     `);
     chatSessions.push(message.from);
     }
-    switch (message.body) {
+    switch (message.body.toLowerCase()) {
+      
       //Info Catat Meter
-      case "!CatatMeter" :
+      case "1":
+      case "!catatmeter" :
         await client.sendText(message.from, `Terdapat 2 sistem cara pencatatan meter pelanggan di PGN.
         1. *Pencatatan meter oleh petugas yang dilakukan 3 bulan sekali.* Setiap wilayah di Area Lampung memiliki  jadwal catat meter yang berbeda beda beda.
         2. *Catat Meter Mandiri* yang dilakukan oleh pelanggan setiap bulan.
@@ -61,23 +48,24 @@ Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil c
         client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
         break;
       //Info Jaminan Pembayaran
-      case "!JaminanPembayaran":
+      case "2":
+      case "!jaminanpembayaran":
         await client.sendText(message.from, `*Apa itu Jaminan Pembayaran?*
 _Jaminan Pembayaran adalah komitmen yang disediakan Pelanggan kepada PGN dalam bentuk uang uang tunai._
-
         `);
-        client.sendText(message.from, `Berikut pertanyaan yang sering muncul mengenai Jaminan Pembayaran:
-🤔 *!TagihanNaik*  -> Kenapa tagihan gas sekarang naik?
-🤔 *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-🤔 *!UntukApa* -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-🤔 *!Berapa* -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-🤔 *!Manfaat*  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+        client.sendText(message.from, `📝 Berikut pertanyaan yang sering muncul mengenai Jaminan Pembayaran:
+4️⃣ atau *!Tagihan* -> Kenapa tagihan gas sekarang naik?
+5️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+6️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+7️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+8️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
         `);
         client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
         break;
 
       //Siapa yang kena JP?
-      case "!Siapa":
+      case "5":
+      case "!siapa":
         await client.sendText(message.from, `*Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?*
   _Jaminan Pembayaran berlaku bagi:_
   a.	Calon Pelanggan yang mengajukan permohonan berlangganan Gas.
@@ -88,7 +76,8 @@ _Jaminan Pembayaran adalah komitmen yang disediakan Pelanggan kepada PGN dalam b
         break;
 
       //JP Untuk apa?
-      case "!UntukApa":
+      case "6":
+      case "!untukapa":
         await client.sendText(message.from,`*Digunakan untuk apa dana Jaminan Pembayaran tersebut?*
 _Jaminan Pembayaran tersebut digunakan sebagai *dana talangan* apabila pelanggan *terlambat membayar atau memiliki tunggakan*._
 *Selama dana Jaminan Pembayaran masih mencukupi* untuk menjadi dana talangan, maka setiap terjadi keterlambatan pembayaran, Jaminan Pembayaran tersebut akan dikurangi sebesar tagihan bulan berjalan.
@@ -96,7 +85,8 @@ _Jaminan Pembayaran tersebut digunakan sebagai *dana talangan* apabila pelanggan
         break;
 
       //Berapa JP?
-      case "!Berapa":
+      case "7":
+      case "!berapa":
         await client.sendText(message.from,`*Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?*
 _Nilai Jaminan Pembayaran yang dibayarkan *berbeda* untuk setiap  pelanggan. Karena nilai Jaminan Pembayaran didasarkan pada rata-rata pemakaian pelanggan dalam 1 tahun._ 
 Adapun rumus perhitungan Jaminan Pembayatan adalah :
@@ -106,7 +96,8 @@ _Misalnya Pemakaian rata-rata 25 M3/bulan, maka 25 M3 x 2 bulan x Rp. 6.200 M3/b
         break;
 
       //Manfaat JP?
-      case "!Manfaat":
+      case "8":
+      case "!manfaat":
         await client.sendText(message.from, `*Apa manfaat Jaminan Pembayaran bagi Pelanggan?*
 a.	Mengurangi resiko pelanggan *_terkena denda_* saat ada keterlambatan pembayaran.
 b.	Mengurangi resiko meter *_disegel_* apabila memiliki tunggakan pembayaran 2 bulan.
@@ -115,58 +106,39 @@ Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
       `);
         break;
 
-      case "!Denda":
+      case "3":
+      case "!denda":
         await client.sendText(message.from,`
       <TODO>`);
       client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`);
 
       //Info Menu
-      case "!Menu":
-        await client.sendText(message.from, `👋Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
-ℹ️ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
-ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
-ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+      default:
+      case 0:
+      case "!menu":
+        await client.sendText(message.from, `📝 Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
+1️⃣ atau *!CatatMeter -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
+2️⃣ atau *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
+3️⃣ atau *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
         
-🤔 *!TagihanNaik*  -> Kenapa tagihan gas sekarang naik?
-🤔 *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-🤔 *!UntukApa* -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-🤔 *!Berapa* -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-🤔 *!Manfaat*  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+4️⃣ atau *!Tagihan* -> Kenapa tagihan gas sekarang naik?
+5️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+6️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+7️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+8️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
         
 *_Untuk pertanyaan dan keluhan lainnya silahkan menghubungi contact center PGN di 1500-645_*
-
-📋 *!Menu* -> Menampilkan list perintah ini kembali`);
+        
+0️⃣ atau *!Menu* -> Menampilkan list perintah ini kembali
+        `);
         break;
 
       //Info Tagihan Naik
-      case "!TagihanNaik":
+      case "4":
+      case "!tagihannaik":
         await client.sendText(message.from,`*Kenapa tagihan gas sekarang naik?*
 Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya adalah biaya Jaminan Pembayaran.
         `);
-        break;
-      case "!AbsenKesehatan":
-       await client.sendText(message.from, 'Siap Bos! Kita isi absen kesehatanmu :)');
-        const spawn = require("child_process").spawn;
-        const abKes = spawn('python3', ["autoAbkes.py"]);
-
-        abKes.stdout.on('data', function(data) {
-            client.sendText(message.from, 'Lapor! Selesai mengisi absen kesehatan, ini buktinya bos!');
-            try {
-              client.sendImage(message.from, 'screenshot.png');
-              
-              client.sendImage(message.from, 'screenshot1.png');
-              
-              client.sendImage(message.from, 'screenshot2.png');
-
-              fs.unlinkSync('screenshot.png');
-              fs.unlinkSync('screenshot1.png');
-              fs.unlinkSync('screenshot2.png');
-            }catch(err){
-              client.sendText(message.from, 'Maaf bos, lagi error nih :/');
-              //client.sendText(message.from, err.text);
-              console.log(err)
-            }
-        });
         break;
       }
   });
@@ -178,3 +150,5 @@ nodeCleanup(function (exitCode, signal) {
         return false; // don't exit yet
     // release resources here before node exits
 });
+
+nodeCleanup();
