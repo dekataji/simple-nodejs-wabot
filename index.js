@@ -49,6 +49,64 @@ Jika format pengiriman benar akan mendapat jawaban otomatis.`);
 Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil cmm akan menjadi berikut`);
         client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
         break;
+      //Info Jaminan Pembayaran
+      case "!JaminanPembayaran":
+        await client.sendText(message.from, `*Apa itu Jaminan Pembayaran?*
+_Jaminan Pembayaran adalah komitmen yang disediakan Pelanggan kepada PGN dalam bentuk uang uang tunai._
+
+        `);
+        client.sendText(message.from, `Berikut pertanyaan yang sering muncul mengenai Jaminan Pembayaran:
+!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
+!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+        `);
+        client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
+        break;
+
+      //Siapa yang kena JP?
+      case "!Siapa":
+        await client.sendText(message.from, `Jaminan Pembayaran berlaku bagi:
+  a.	Calon Pelanggan yang mengajukan permohonan berlangganan Gas.
+  b.	Pelanggan eksisting yang:
+      i.	Terlambat membayar (lebih dari periode pembayaran tanggl 1 s.d. 20 setiap bulannya)
+      ii.	Memiliki tunggakan tagihan
+        `);
+        break;
+
+      //JP Untuk apa?
+      case "!UntukApa":
+        await client.sendText(message.from,`
+Jaminan Pembayaran tersebut digunakan sebagai _dana talangan_ apabila pelanggan *terlambat membayar atau memiliki tunggakan*.
+*Selama dana Jaminan Pembayaran masih mencukupi* untuk menjadi dana talangan, maka setiap terjadi keterlambatan pembayaran, Jaminan Pembayaran tersebut akan dikurangi sebesar tagihan bulan berjalan.
+        `);
+        break;
+
+      //Berapa JP?
+      case "!Berapa":
+        await client.sendText(message.from,`
+Nilai Jaminan Pembayaran yang dibayarkan *berbeda* untuk setiap  pelanggan. Karena _nilai Jaminan Pembayaran didasarkan pada rata-rata pemakaian pelanggan dalam 1 tahun._ 
+Adapun rumus perhitungan Jaminan Pembayatan adalah :
+*Rata-rata Pemakaian gas 1 tahun x 2 bulan x Harga Gas*
+_Misalnya Pemakaian rata-rata 25 M3/bulan, maka 25 M3 x 2 bulan x Rp. 6.200 M3/bulan = Rp. 310.000,-_        
+        `);
+        break;
+
+      //Manfaat JP?
+      case "!Manfaat":
+        await client.sendText(message.from, `Berikut Manfaat Jaminan Pembayaran:
+a.	Mengurangi resiko pelanggan *_terkena denda_* saat ada keterlambatan pembayaran.
+b.	Mengurangi resiko meter *_disegel_* apabila memiliki tunggakan pembayaran 2 bulan.
+c.	Mengurangi resiko meter *_dicabut_* apabila memiliki tunggakan pembayaran 3 bulan.
+Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
+      `);
+        break;
+
+      case "!Denda":
+        await client.sendText(message.from,`
+      <TODO>`);
+      client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`);
 
       //Info Menu
       case "!Menu":
@@ -59,6 +117,12 @@ Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil c
         📋 *!Menu* -> Menampilkan list perintah ini kembali`);
         break;
 
+      //Info Tagihan Naik
+      case "!TagihanNaik":
+        await client.sendText(message.from,`*Kenapa tagihan gas sekarang naik?*
+Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya adalah biaya Jaminan Pembayaran.
+        `);
+        break;
       case "!AbsenKesehatan":
        await client.sendText(message.from, 'Siap Bos! Kita isi absen kesehatanmu :)');
         const spawn = require("child_process").spawn;
