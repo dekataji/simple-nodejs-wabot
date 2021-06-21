@@ -1,0 +1,148 @@
+# Auto eSMS
+
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+#from imgrender import render
+from datetime import date
+import numpy as np
+from PIL import Image
+import sys
+
+import time
+
+options = FirefoxOptions()
+options.add_argument("--headless")
+options.add_argument('--start-maximized')
+browser = webdriver.Firefox(executable_path='/usr/local/bin/geckodriver', options=options)
+print('Browser opened')
+today = date.today()
+
+delay = 300
+delayVar = [30, 60, 90, 45]
+
+def get_ansi_color_code(r, g, b):
+    if r == g and g == b:
+        if r < 8:
+            return 16
+        if r > 248:
+            return 231
+        return round(((r - 8) / 247) * 24) + 232
+    return 16 + (36 * round(r / 255 * 5)) + (6 * round(g / 255 * 5)) + round(b / 255 * 5)
+
+def get_color(r, g, b):
+    return "\x1b[48;5;{}m \x1b[0m".format(int(get_ansi_color_code(r,g,b)))
+
+def show_image(img_path):
+    try:
+        img = Image.open(img_path)
+    except FileNotFoundError:
+        exit('Image not found.')
+    h = 1920
+    w = int((img.width / img.height) * h)
+    img = img.resize((w, h), Image.ANTIALIAS)
+    img_arr = np.asarray(img)
+
+    for x in range(0, h):
+        for y in range(0, w):
+            pix = img_arr[x][y]
+            print(get_color(pix[0], pix[1], pix[2]), sep='', end='')
+        print()
+
+# buka eSMS
+browser.get('http://pgn.id/AbsensiHarianPGNGroup')
+
+
+
+while True:
+    try:
+        wait = WebDriverWait(browser, delay, poll_frequency=1)
+        counter = delay
+        wait.until(EC.presence_of_element_located((By.XPATH, "//div[@role='option' and contains(@class, 'isPlaceholder')]")))
+    
+        
+
+        # Nama
+        pilihan = browser.find_elements_by_xpath("//div[@role='option' and contains(@class, 'isPlaceholder')]")
+        pilihan[0].click()
+        # get names
+        names = browser.find_elements_by_xpath("//div[@role='option' and not(contains(@class, 'isPlaceholder'))]")
+        optionText = [i.text for i in names]
+        #select name
+        names[optionText.index('Dionisius Kristian Tirta Aji (0014932766) - PT PGAS Solution')].click()
+        print(pilihan[0].text)
+        time.sleep(1)
+
+        pilihan[1].click()
+        namaPerusahaan = browser.find_elements_by_xpath("//div[@role='option' and not(contains(@class, 'isPlaceholder'))]")
+        perusahaanText = [i.text for i in namaPerusahaan]
+        namaPerusahaan[perusahaanText.index('PT PGN Tbk')].click()
+        time.sleep(1)
+
+        pilihan[2].click()
+        satKer = browser.find_elements_by_xpath("//div[@role='option' and not(contains(@class, 'isPlaceholder'))]")
+        satkerText = [i.text for i in satKer]
+        satKer[satkerText.index('Area Lampung')].click()
+        time.sleep(1)
+        browser.save_screenshot('screenshot1.png')
+
+        pilihan[3].click()
+        status = browser.find_elements_by_xpath("//div[@role='option' and not(contains(@class, 'isPlaceholder'))]")
+        statusText = [i.text for i in status]
+        status[statusText.index('PWTT / Direct Hire/ Organik')].click()
+        time.sleep(1)
+
+        pilihan[4].click()
+        sistemKerja = browser.find_elements_by_xpath("//div[@role='option' and not(contains(@class, 'isPlaceholder'))]")
+        sistemkerjaText = [i.text for i in sistemKerja]
+        if today.strftime("%A") == "Saturday" or today == "Sunday" :
+            sistemKerja[sistemkerjaText.index("Others (Pekerja Shift Off/Off Duty, Pekerja Cuti, Ijin, dan HARI LIBUR)")].click()
+        else :
+            sistemKerja[sistemkerjaText.index("Work From Office/Station/Area")].click()
+        time.sleep(1)
+
+        pilihan[5].click()
+        lokasi = browser.find_elements_by_xpath("//div[@role='option' and not(contains(@class, 'isPlaceholder'))]")
+        lokasiText = [i.text for i in lokasi]
+        lokasi[lokasiText.index("Kantor Area Lampung")].click()
+        time.sleep(1)
+
+        radiobuttons = browser.find_elements_by_class_name("appsMaterialWizToggleRadiogroupElContainer")
+        radiobuttons[4].click()
+        radiobuttons[8].click()
+        radiobuttons[10].click()
+        radiobuttons[12].click()
+
+        checkboxes = browser.find_elements_by_class_name("quantumWizTogglePapercheckboxInnerBox")
+        checkboxes[0].click()
+
+        textboxes = browser.find_elements_by_class_name("quantumWizTextinputPaperinputInput")
+        textboxes[0].send_keys('081225510541')
+
+        ele = browser.find_element("xpath", '//body')
+        total_height = ele.size["height"]+1000
+
+        browser.set_window_size(1920, total_height)      #the trick
+        time.sleep(2)
+        browser.save_screenshot("screenshot2.png")
+        #show_image("screenshot1.png")
+        
+        submitbutton = browser.find_element_by_class_name("appsMaterialWizButtonPaperbuttonContent")
+        #submitbutton.click()
+
+
+        print('google form complete')
+        sys.stdout.flush()
+
+
+        break # it will break from the loop once the specific element will be present. 
+    except TimeoutException:
+        browser.close()
+# ketika masih ada surat masuk
+
+browser.close()
+    
