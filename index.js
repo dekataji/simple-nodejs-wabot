@@ -5,6 +5,9 @@ var nodeCleanup = require('node-cleanup');
 var fork = require('child_process').fork;
 
 
+//TODO:
+//command dibikin pake nomor
+//filter pesan CMM
 
 
 wa.create().then(client => start(client));
