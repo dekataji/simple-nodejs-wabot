@@ -21,11 +21,13 @@ Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perinta
 ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
 ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
 
-🤔!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
-🤔!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-🤔!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-🤔!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-🤔!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+🤔 *!TagihanNaik*  -> Kenapa tagihan gas sekarang naik?
+🤔 *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+🤔 *!UntukApa* -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+🤔 *!Berapa* -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+🤔 *!Manfaat*  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+
+*_Untuk pertanyaan dan keluhan lainnya silahkan menghubungi contact center PGN di 1500-645_*
 
 📋 *!Menu* -> Menampilkan list perintah ini kembali
     `);
@@ -62,11 +64,11 @@ _Jaminan Pembayaran adalah komitmen yang disediakan Pelanggan kepada PGN dalam b
 
         `);
         client.sendText(message.from, `Berikut pertanyaan yang sering muncul mengenai Jaminan Pembayaran:
-🤔!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
-🤔!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-🤔!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-🤔!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-🤔!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+🤔 *!TagihanNaik*  -> Kenapa tagihan gas sekarang naik?
+🤔 *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+🤔 *!UntukApa* -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+🤔 *!Berapa* -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+🤔 *!Manfaat*  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
         `);
         client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
         break;
@@ -121,12 +123,15 @@ Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
 ℹ️ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
 ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
 ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+        
+🤔 *!TagihanNaik*  -> Kenapa tagihan gas sekarang naik?
+🤔 *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+🤔 *!UntukApa* -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+🤔 *!Berapa* -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+🤔 *!Manfaat*  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+        
+*_Untuk pertanyaan dan keluhan lainnya silahkan menghubungi contact center PGN di 1500-645_*
 
-🤔!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
-🤔!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-🤔!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-🤔!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-🤔!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
 📋 *!Menu* -> Menampilkan list perintah ini kembali`);
         break;
 
