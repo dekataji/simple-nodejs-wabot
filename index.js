@@ -18,7 +18,7 @@ function start(client) {
 
   client.onMessage(async message => {
     if(chatSessions.includes(message.from) == false){
-      client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan menjadi pelanggan setia PGN.
+      client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan Anda menjadi pelanggan setia PGN.
 Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
 ℹ️ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
 ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
