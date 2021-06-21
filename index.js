@@ -21,6 +21,12 @@ Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perinta
 ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
 ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
 
+🤔!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
+🤔!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+🤔!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+🤔!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+🤔!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+
 📋 *!Menu* -> Menampilkan list perintah ini kembali
     `);
     chatSessions.push(message.from);
@@ -56,37 +62,38 @@ _Jaminan Pembayaran adalah komitmen yang disediakan Pelanggan kepada PGN dalam b
 
         `);
         client.sendText(message.from, `Berikut pertanyaan yang sering muncul mengenai Jaminan Pembayaran:
-!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
-!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+🤔!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
+🤔!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+🤔!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+🤔!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+🤔!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
         `);
         client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
         break;
 
       //Siapa yang kena JP?
       case "!Siapa":
-        await client.sendText(message.from, `Jaminan Pembayaran berlaku bagi:
+        await client.sendText(message.from, `*Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?*
+  _Jaminan Pembayaran berlaku bagi:_
   a.	Calon Pelanggan yang mengajukan permohonan berlangganan Gas.
   b.	Pelanggan eksisting yang:
-      i.	Terlambat membayar (lebih dari periode pembayaran tanggl 1 s.d. 20 setiap bulannya)
-      ii.	Memiliki tunggakan tagihan
+      i.	*Terlambat membayar* (lebih dari periode pembayaran tanggl 1 s.d. 20 setiap bulannya)
+      ii.	*Memiliki tunggakan tagihan*
         `);
         break;
 
       //JP Untuk apa?
       case "!UntukApa":
-        await client.sendText(message.from,`
-Jaminan Pembayaran tersebut digunakan sebagai _dana talangan_ apabila pelanggan *terlambat membayar atau memiliki tunggakan*.
+        await client.sendText(message.from,`*Digunakan untuk apa dana Jaminan Pembayaran tersebut?*
+_Jaminan Pembayaran tersebut digunakan sebagai *dana talangan* apabila pelanggan *terlambat membayar atau memiliki tunggakan*._
 *Selama dana Jaminan Pembayaran masih mencukupi* untuk menjadi dana talangan, maka setiap terjadi keterlambatan pembayaran, Jaminan Pembayaran tersebut akan dikurangi sebesar tagihan bulan berjalan.
         `);
         break;
 
       //Berapa JP?
       case "!Berapa":
-        await client.sendText(message.from,`
-Nilai Jaminan Pembayaran yang dibayarkan *berbeda* untuk setiap  pelanggan. Karena _nilai Jaminan Pembayaran didasarkan pada rata-rata pemakaian pelanggan dalam 1 tahun._ 
+        await client.sendText(message.from,`*Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?*
+_Nilai Jaminan Pembayaran yang dibayarkan *berbeda* untuk setiap  pelanggan. Karena nilai Jaminan Pembayaran didasarkan pada rata-rata pemakaian pelanggan dalam 1 tahun._ 
 Adapun rumus perhitungan Jaminan Pembayatan adalah :
 *Rata-rata Pemakaian gas 1 tahun x 2 bulan x Harga Gas*
 _Misalnya Pemakaian rata-rata 25 M3/bulan, maka 25 M3 x 2 bulan x Rp. 6.200 M3/bulan = Rp. 310.000,-_        
@@ -95,7 +102,7 @@ _Misalnya Pemakaian rata-rata 25 M3/bulan, maka 25 M3 x 2 bulan x Rp. 6.200 M3/b
 
       //Manfaat JP?
       case "!Manfaat":
-        await client.sendText(message.from, `Berikut Manfaat Jaminan Pembayaran:
+        await client.sendText(message.from, `*Apa manfaat Jaminan Pembayaran bagi Pelanggan?*
 a.	Mengurangi resiko pelanggan *_terkena denda_* saat ada keterlambatan pembayaran.
 b.	Mengurangi resiko meter *_disegel_* apabila memiliki tunggakan pembayaran 2 bulan.
 c.	Mengurangi resiko meter *_dicabut_* apabila memiliki tunggakan pembayaran 3 bulan.
@@ -111,10 +118,16 @@ Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
       //Info Menu
       case "!Menu":
         await client.sendText(message.from, `👋Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
-        ✅ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
-        ✅ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
-        ✅ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
-        📋 *!Menu* -> Menampilkan list perintah ini kembali`);
+ℹ️ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
+ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
+ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+
+🤔!TagihanNaik  -> Kenapa tagihan gas sekarang naik?
+🤔!Siapa  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+🤔!UntukApa -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+🤔!Berapa -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+🤔!Manfaat  -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+📋 *!Menu* -> Menampilkan list perintah ini kembali`);
         break;
 
       //Info Tagihan Naik
