@@ -1,6 +1,10 @@
 // import { create, Client } from '@open-wa/wa-automate';
 const wa = require('@open-wa/wa-automate');
 const fs = require('fs')
+var nodeCleanup = require('node-cleanup');
+var fork = require('child_process').fork;
+
+
 
 
 wa.create().then(client => start(client));
@@ -66,6 +70,15 @@ Contoh : *018123456#0000*
   });
 }
 
-[`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach((eventType) => {
-  process.on(eventType, cleanUpServer.bind(null, eventType));
-})
+var child = fork('path-to-child-script.js');
+child.on('exit', function (exitCode, signal) {
+    child = null; // enable the cleanup handler
+    if (signal === 'SIGINT')
+        process.kill(process.pid, 'SIGINT');
+});
+
+nodeCleanup(function (exitCode, signal) {
+    if (child !== null && signal === 'SIGINT')
+        return false; // don't exit yet
+    // release resources here before node exits
+});
