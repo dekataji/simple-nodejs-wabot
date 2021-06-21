@@ -10,19 +10,23 @@ var fork = require('child_process').fork;
 wa.create().then(client => start(client));
 
 function start(client) {
+  var chatSessions = [];
+
+
   client.onMessage(async message => {
-    var firstMessage = true;
-    if(firstMessage == true){
-      await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan menjadi pelanggan setia PGN.
+    if(chatSessions.includes(message.from) == false){
+      client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan menjadi pelanggan setia PGN.
 Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
-✅ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
-✅ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
-✅ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+ℹ️ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
+ℹ️ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
+ℹ️ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+
 📋 *!Menu* -> Menampilkan list perintah ini kembali
     `);
-    firstMessage = false;
+    chatSessions.push(message.from);
     }
     switch (message.body) {
+      //Info Catat Meter
       case "!CatatMeter" :
         await client.sendText(message.from, `Terdapat 2 sistem cara pencatatan meter pelanggan di PGN.
         1. *Pencatatan meter oleh petugas yang dilakukan 3 bulan sekali.* Setiap wilayah di Area Lampung memiliki  jadwal catat meter yang berbeda beda beda.
@@ -34,20 +38,25 @@ Periode pencatatan adalah di *tanggal 1 s.d.  20 setiap bulannya*.
         `);
         client.sendText(message.from, `*Kemana dan bagaimana cara pengiriman foto untuk catat meter?*
 _Foto meter dapat dikirimkan ke nomor WA terpusat *083820341177*_
-Pada caption foto tuliskan: _(ID Reff Pelanggan)_#_(Angka Meter)_
+Pada caption foto tuliskan: _(ID Reff Pelanggan)_ # _(Angka Meter)_
 Contoh : *018123456#0000*
         `);
         client.sendContact(message.from, '6283820341177@c.us');
-        client.sendImage(message.from, './cmm/cmm_tutorial.jpeg', `TULISAN 018123456#0000 *Harus menjadi caption foto*, sehingga foto dan tulisan 018123456#0000 _terkirim dalam 1 chat_. 
-Jika format pengiriman benar akan menadapat jawaban otomatis.`);
-        client.sendImage(message.from, './cmm/cmm_salah.jpeg', `CONTOH SALAH.
+        client.sendImage(message.from, './cmm/cmm_tutorial.jpeg','cmm_tutorial',`TULISAN 018123456#0000 *Harus menjadi caption foto*, sehingga foto dan tulisan 018123456#0000 _terkirim dalam 1 chat_. 
+Jika format pengiriman benar akan mendapat jawaban otomatis.`);
+
+        client.sendImage(message.from, './cmm/cmm_salah.jpeg','cmm_salah', `CONTOH SALAH.
 Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil cmm akan menjadi berikut`);
-        
+        client.sendText(message.from, `Silahkan ketik *!Menu* untuk Menampilkan list perintah`)
         break;
 
-      case "!Hi":
-        await client.sendText(message.from, '👋 Hello! Berikut yang bisa saya lakukan:');
-        client.sendText(message.from, '!Absenkesehatan = isi absen kesehatan harian di pgn.id/AbsenKesehatan');
+      //Info Menu
+      case "!Menu":
+        await client.sendText(message.from, `👋Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
+        ✅ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
+        ✅ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
+        ✅ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+        📋 *!Menu* -> Menampilkan list perintah ini kembali`);
         break;
 
       case "!AbsenKesehatan":
@@ -78,12 +87,6 @@ Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil c
   });
 }
 
-var child = fork('path-to-child-script.js');
-child.on('exit', function (exitCode, signal) {
-    child = null; // enable the cleanup handler
-    if (signal === 'SIGINT')
-        process.kill(process.pid, 'SIGINT');
-});
 
 nodeCleanup(function (exitCode, signal) {
     if (child !== null && signal === 'SIGINT')
