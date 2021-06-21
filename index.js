@@ -7,8 +7,19 @@ wa.create().then(client => start(client));
 
 function start(client) {
   client.onMessage(async message => {
+    await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan menjadi pelanggan setia PGN.
+    Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
+    ✅*!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
+    ✅*!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
+    ✅!Denda  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+    `);
     switch (message.body) {
-      case "Hi":
+      case "!CatatMeter" :
+        await client.sendText(message.from, `Terdapat 2 sistem cara pencatatan meter pelanggan di PGN.
+        1. *Pencatatan meter oleh petugas yang dilakukan 3 bulan sekali.* Setiap wilayah di Area Lampung memiliki  jadwal catat meter yang berbeda beda beda.
+        2. *Catat Meter Mandiri* yang dilakukan oleh pelanggan setiap bulan.
+        `);
+      case "!Hi":
         await client.sendText(message.from, '👋 Hello! Berikut yang bisa saya lakukan:');
         client.sendText(message.from, '!Absenkesehatan = isi absen kesehatan harian di pgn.id/AbsenKesehatan');
         break;
