@@ -11,13 +11,17 @@ wa.create().then(client => start(client));
 
 function start(client) {
   client.onMessage(async message => {
-    await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan menjadi pelanggan setia PGN.
+    var firstMessage = true;
+    if(firstMessage == true){
+      await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan menjadi pelanggan setia PGN.
 Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
 ✅ *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
 ✅ *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
 ✅ *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
 📋 *!Menu* -> Menampilkan list perintah ini kembali
     `);
+    firstMessage = false;
+    }
     switch (message.body) {
       case "!CatatMeter" :
         await client.sendText(message.from, `Terdapat 2 sistem cara pencatatan meter pelanggan di PGN.
@@ -34,6 +38,10 @@ Pada caption foto tuliskan: _(ID Reff Pelanggan)_#_(Angka Meter)_
 Contoh : *018123456#0000*
         `);
         client.sendContact(message.from, '6283820341177@c.us');
+        client.sendImage(message.from, './cmm/cmm_tutorial.jpeg', `TULISAN 018123456#0000 *Harus menjadi caption foto*, sehingga foto dan tulisan 018123456#0000 _terkirim dalam 1 chat_. 
+Jika format pengiriman benar akan menadapat jawaban otomatis.`);
+        client.sendImage(message.from, './cmm/cmm_salah.jpeg', `CONTOH SALAH.
+Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil cmm akan menjadi berikut`);
         
         break;
 
