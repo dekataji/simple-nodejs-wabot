@@ -8,18 +8,18 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from datetime import date
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 
 import sys
 import time
 
 def main(wfh = "tidak") :
-    display - Display(visible=0, size=(1024,768))
-    display.start()
-    cap = DesiredCapabilities().FIREFOX
-    cap["marionette"] = False
+   # display - Display(visible=0, size=(1024,768))
+   # display.start()
+   # cap = DesiredCapabilities().FIREFOX
+   # cap["marionette"] = False
     options = FirefoxOptions()
-    options.setheadless(headless = True)
+    #options.setheadless(headless = True)
     options.add_argument("--headless")
     options.add_argument('--start-maximized')
     browser = webdriver.Firefox(executable_path='/usr/local/bin/geckodriver',options=options)
@@ -76,7 +76,7 @@ def main(wfh = "tidak") :
             #print(satkerText.index('Area Lampung'))
             satKer[2146].click()
             time.sleep(delay)
-            browser.save_screenshot("screenshot.png")
+            #browser.save_screenshot("screenshot.png")
 
             pilihan[3].click()
             time.sleep(delay)
@@ -118,7 +118,7 @@ def main(wfh = "tidak") :
             radiobuttons[8].click()
             radiobuttons[10].click()
             radiobuttons[12].click()
-            browser.save_screenshot("screenshot1.png")
+            #browser.save_screenshot("screenshot1.png")
 
             checkboxes = browser.find_elements_by_class_name("quantumWizTogglePapercheckboxInnerBox")
             checkboxes[0].click()
@@ -127,11 +127,11 @@ def main(wfh = "tidak") :
             textboxes[0].send_keys('081225510541')
 
             time.sleep(delay)
-            browser.save_screenshot("screenshot2.png")
+            browser.save_screenshot("screenshot.png")
         #show_image("screenshot1.png")
         
             submitbutton = browser.find_element_by_class_name("appsMaterialWizButtonPaperbuttonContent")
-        #submitbutton.click()
+            submitbutton.click()
 
 
             print('google form complete')
