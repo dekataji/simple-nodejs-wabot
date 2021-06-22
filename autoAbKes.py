@@ -135,6 +135,7 @@ def main(wfh = "tidak") :
 
 
             print('google form complete')
+            browser.save_screenshot("submitted.png")
 
             break # it will break from the loop once the specific element will be present. 
         except Exception as e:
