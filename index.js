@@ -8,7 +8,6 @@ var fork = require('child_process').fork;
 
 //TODO:
 //filter pesan CMM
-//kirim kontak via vps
 
 
 wa.create({
@@ -17,8 +16,11 @@ wa.create({
 
 function start(client) {
   var chatSessions = [];
-
-
+	// client.onStateChanged(async state) => {
+	//if(state === 'CONNECTED'){
+ // await client.sendText('6281225510541@c.us','Status report, OK');
+ //}
+ //}
   client.onMessage(async message => {
     if(chatSessions.includes(message.from) == false){
       await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan Anda menjadi pelanggan setia PGN.
@@ -51,7 +53,7 @@ _Foto meter dapat dikirimkan ke nomor WA terpusat *083820341177*_
 Pada caption foto tuliskan: _(ID Reff Pelanggan)_ # _(Angka Meter)_
 Contoh : *018123456#0000*
         `);
-        //await client.sendContact(message.from, '6283820341177@c.us');
+        await client.sendContact(message.from, '6283820341177@c.us');
       break;
 
       case "12":
