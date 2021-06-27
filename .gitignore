@@ -6,3 +6,8 @@ logs/session/1624173434064.log
 logs/session/1624173522329.log
 session.data.json
 logs/session/1624263081017.log
+
+# managed by open-wa
+**.data.json
+**.node-persist**
+# end managed by open-wa

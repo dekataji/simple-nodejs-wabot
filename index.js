@@ -22,11 +22,23 @@ function start(client) {
  //}
  //}
   client.onMessage(async message => {
+    const cmm_pattern = new RegExp('(\d{9})#(\d+)');
+    let cekCMM = String(message.body).match(cmm_pattern);
+    //console.log(cekCMM.test(message));
+
     if(chatSessions.includes(message.from) == false){
       await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan Anda menjadi pelanggan setia PGN.
     `);
-    chatSessions.push(message.from);
+    
+    if (cekCMM !== null){
+        //reply message
+        await client.sendText(message.from, `
+        Id Pelanggan anda : ${cekCMM[1]} 
+        Dengan pemakaian : ${cekCMM[2]}
+        `);
     }
+    chatSessions.push(message.from);
+    } else {
     switch (message.body.toLowerCase()) {
       
       //Info Catat Meter
@@ -45,7 +57,8 @@ Pertanyaan yang sering muncul :
 1️⃣2️⃣ atau !CaraCMM -> *Bagaimana cara mengirim foto untuk catat meter mandiri?*
         `);
         break;
-      
+          //cek CMM
+    
       case "11":
       case "!nomorcmm":
         await client.sendText(message.from, `*Kemana pengiriman foto untuk catat meter?*
@@ -166,14 +179,15 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
         `);
         break;
       }
+    }
   });
 }
 
 
-nodeCleanup(function (exitCode, signal) {
-    if (child !== null && signal === 'SIGINT')
-        return false; // don't exit yet
+//nodeCleanup(function (exitCode, signal) {
+//    if (child !== null && signal === 'SIGINT')
+//        return false; // don't exit yet
     // release resources here before node exits
-});
+//});
 
-nodeCleanup();
+//nodeCleanup();

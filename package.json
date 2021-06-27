@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^4.5.1",
+    "@open-wa/wa-automate": "^4.7.0",
     "async-exit-hook": "^2.0.1",
     "node-cleanup": "^2.1.2"
   }
