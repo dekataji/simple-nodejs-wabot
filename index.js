@@ -34,7 +34,7 @@ client.onMessage(async message => {
     const cmm_pattern = new RegExp('([0-9]{9})#([0-9]+)');
     let cekCMM = String(message.body).match(cmm_pattern);
     switch(state){
-      
+
       case 0:
       if(cekCMM != null){
         await client.sendText(message.from,`
@@ -177,7 +177,7 @@ Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
         break;
 
         case "00":
-        case !tanya:
+        case "!tanya":
           state = 9;
           break;
 
