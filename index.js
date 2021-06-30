@@ -172,13 +172,14 @@ Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
 ✨	Menyediakan Jaminan Pembayaran sebesar Rp. 360.000,-
 ✨	Terdapat jaringan pipa gas bumi di depan rumah
           `);
-        client.sendText(message.from, `Apabila anda memiliki pertanyaan lain, Ketik Angka 0️⃣0️⃣ atau !Tanya`);
-        client.sendText(message.from, `Silahkan Ketik Angka 0️⃣ atau *!Menu* untuk Menampilkan list perintah`);
+        await client.sendText(message.from, `Apabila anda memiliki pertanyaan lain, Ketik Angka 0️⃣0️⃣ atau !Tanya`);
+        await client.sendText(message.from, `Silahkan Ketik Angka 0️⃣ atau *!Menu* untuk Menampilkan list perintah`);
         break;
 
         case "00":
         case "!tanya":
           state = 9;
+          await client.sendText(message.from, `Silahkan ketik pertanyaan Anda`);
           break;
 
       //Info Menu
@@ -215,7 +216,7 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
           break;
     //close message switch
     }
-      state = 0;
+      //state = 0;
       break;
       
 
@@ -239,8 +240,8 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
   // close state switch
   }
   break;
-
   }
+
   });
   
 }
