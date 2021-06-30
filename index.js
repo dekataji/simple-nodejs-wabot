@@ -14,18 +14,27 @@ wa.create({
   useChrome: true
 }).then(client => start(client));
 
-function start(client) {
+async function start(client) {
   var chatSessions = [];
   var state = 0;
 
+  const unreadMessages = await client.getAllUnreadMessages();
+  var unique = Array.from(new Set(unreadMessages));
+  for(var i of unique){
+    if(i.from !== '6283820341177@c.us') await client.sendText(i.from, `👋 Hai! Terima kasih telah menghubungi kami.
+
+Silahkan ketik Angka 0️⃣ atau *!Menu* untuk menampilkan list perintah
+    `);
+    
+  }
   
-  client.onMessage(async message => {
-  while(true)
+client.onMessage(async message => {
+  while(message.from !== '6283820341177@c.us')
   {
     const cmm_pattern = new RegExp('([0-9]{9})#([0-9]+)');
     let cekCMM = String(message.body).match(cmm_pattern);
     switch(state){
-      //case greeting
+      
       case 0:
       if(cekCMM != null){
         await client.sendText(message.from,`
@@ -34,7 +43,7 @@ Silahkan anda kirimkan kembali CMM Anda ke nomor CMM PGN Pusat. *083820341177*
       `);
         client.sendContact(message.from, '6283820341177@c.us');
         client.sendText(message.from,`
-Info selanjutnya, silahkan ketik Angka 1 untuk mempelajari lebih lanjut tentang Catat Meter Mandiri
+Info selanjutnya, silahkan ketik Angka _*1*_ untuk mempelajari lebih lanjut tentang Catat Meter Mandiri
       `);
         state = 1;
         break;
@@ -63,8 +72,8 @@ _Catat Meter Mandiri adalah kegiatan pelaporan foto meter yang dilakukan pelangg
 Periode pencatatan adalah di *tanggal 1 s.d.  20 setiap bulannya*.
 
 Pertanyaan yang sering muncul :
-1️⃣1️⃣ atau !NomorCMM -> *Kemana pengiriman foto untuk catat meter?*
-1️⃣2️⃣ atau !CaraCMM -> *Bagaimana cara mengirim foto untuk catat meter mandiri?*
+Ketik Angka 1️⃣1️⃣ atau !NomorCMM -> *Kemana pengiriman foto untuk catat meter?*
+Ketik Angka 1️⃣2️⃣ atau !CaraCMM -> *Bagaimana cara mengirim foto untuk catat meter mandiri?*
         `);
           break;
           //cek CMM
@@ -98,13 +107,13 @@ Jika foto dulu baru dikirimkan baru dilanjut tulisan 018123456#0000 maka hasil c
 _Jaminan Pembayaran adalah komitmen yang disediakan Pelanggan kepada PGN dalam bentuk uang uang tunai._
         `);
           client.sendText(message.from, `📝 Berikut pertanyaan yang sering muncul mengenai Jaminan Pembayaran:
-2️⃣1️⃣ atau *!Tagihan* -> Kenapa tagihan gas sekarang naik?
-2️⃣2️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-2️⃣3️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-2️⃣4️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-2️⃣5️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+Ketik Angka 2️⃣1️⃣ atau *!Tagihan* -> Kenapa tagihan gas sekarang naik?
+Ketik Angka 2️⃣2️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+Ketik Angka 2️⃣3️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+Ketik Angka 2️⃣4️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+Ketik Angka 2️⃣5️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
         `);
-          client.sendText(message.from, `Silahkan ketik 0️⃣ atau *!Menu* untuk Menampilkan list perintah`)
+          client.sendText(message.from, `Silahkan Ketik Angka 0️⃣ atau *!Menu* untuk Menampilkan list perintah`)
           break;
 
       //Siapa yang kena JP?
@@ -151,33 +160,49 @@ Jaminan Pembayaran *akan dikembalikan saat pelanggan berhenti berlangganan.*
           break;
 
         case "3":
-        case "!denda":
+        case "!daftar":
           await client.sendText(message.from,`
-      <TODO>`);
-        client.sendText(message.from, `Silahkan ketik 0️⃣ atau *!Menu* untuk Menampilkan list perintah`);
+🔊 Program PGN Sayang Ibu Tahun 2021 🔊
+✨	GRATIS Pipa Servis dan Meter Gas
+✨	GRATIS Pipa Instalasi di dalam rumah (max. 15 meter)
+✨	GRATIS biaya konversi alat 1 unit max 2 tungku
+✨	Selang dan kompor gas disediakan oleh pelanggan *(bisa menggunakan kompor LPG yang ada, jika kondisi nya masih layak pakai)*
+✨	Harga Gas Rp. 6.200 M3
+✨	Pemakaian min-max perbulan kontrak 4-50 M3/bulan
+✨	Menyediakan Jaminan Pembayaran sebesar Rp. 360.000,-
+✨	Terdapat jaringan pipa gas bumi di depan rumah
+          `);
+        client.sendText(message.from, `Apabila anda memiliki pertanyaan lain, Ketik Angka 0️⃣0️⃣ atau !Tanya`);
+        client.sendText(message.from, `Silahkan Ketik Angka 0️⃣ atau *!Menu* untuk Menampilkan list perintah`);
+        break;
+
+        case "00":
+        case !tanya:
+          state = 9;
+          break;
 
       //Info Menu
         default:
         case 0:
         case "!menu":
           await client.sendText(message.from, `📝 Berikut informasi yang dapat anda temukan melalui WA ini, silahkan kirim perintah dengan format berikut:
-1️⃣ atau *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
-2️⃣ atau *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
-3️⃣ atau *!Denda*  -> Informasi mengenai denda dan ketentuan keterlambatan pembayaran tagihan Gas
+Ketik Angka 1️⃣ atau *!CatatMeter* -> Informasi mengenai Prosedur Catat Meter oleh petugas PGN, dan Catat Meter Mandiri yang dapat dilakukan oleh pelanggan.
+Ketik Angka 2️⃣ atau *!JaminanPembayaran*  -> Informasi mengenai kebijakan Jaminan Pembayaran yang diterapkan oleh PGN
+Ketik Angka 3️⃣ atau *!Daftar*  -> Informasi mengenai cara menjadi pelanggan baru PGN
 
 Pertanyaan yang sering muncul :
-1️⃣1️⃣ atau !NomorCMM -> *Kemana pengiriman foto untuk catat meter?*
-1️⃣2️⃣ atau !CaraCMM -> *Bagaimana cara mengirim foto untuk catat meter mandiri?*
+Ketik Angka 1️⃣1️⃣ atau !NomorCMM -> *Kemana pengiriman foto untuk catat meter?*
+Ketik Angka 1️⃣2️⃣ atau !CaraCMM -> *Bagaimana cara mengirim foto untuk catat meter mandiri?*
 
-2️⃣1️⃣ atau *!Tagihan* -> Kenapa tagihan gas sekarang naik?
-2️⃣2️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
-2️⃣3️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
-2️⃣4️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
-2️⃣5️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+Ketik Angka 2️⃣1️⃣ atau *!Tagihan* -> Kenapa tagihan gas sekarang naik?
+Ketik Angka 2️⃣2️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan Jaminan Pembayaran?
+Ketik Angka 2️⃣3️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
+Ketik Angka 2️⃣4️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
+Ketik Angka 2️⃣5️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
         
 *_Untuk pertanyaan dan keluhan lainnya silahkan menghubungi contact center PGN di 1500-645_*
         
-0️⃣ atau *!Menu* -> Menampilkan list perintah ini kembali
+Ketik Angka 0️⃣ atau *!Menu* -> Menampilkan list perintah ini kembali
         `);
           break;
 
@@ -194,22 +219,27 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
       break;
       
 
-    //case CMM nyasar
-    case 2:
-      client.sendText(message.from,`
-Sepertinya anda mengirimkan data Catat Meter Mandiri.
-Silahkan anda kirimkan kembali CMM Anda ke nomor CMM PGN Pusat. *083820341177*
-      `);
-      client.sendContact(message.from, '6283820341177@c.us');
-      client.sendText(message.from,`
-Info selanjutnya, silahkan ketik Angka 1 untuk mempelajari lebih lanjut tentang Catat Meter Mandiri
-      `);
+    //case tanya
+    case 9:
+      while (message.body.toLowerCase !== '!selesai'){
+      await client.sendText(message.from, `Silahkan ketik pertanyaan Anda, pertanyaan Anda akan kami segera kami jawab.
+     `);
+      client.sendText(message.from, 'ketik !Selesai untuk mengakhiri pesan Anda');
+      //client.onMessage( message => {
+        //client.forwardMessages('6281225510541@c.us', message.body);
+      //});
+      //}
+      client.sendText(message.from, `Terima kasih telah menghubungi kami, pertanyaan Anda akan segera kami jawab.
+     `);
+
       state = 0;
       break;
+      }
   
   // close state switch
   }
   break;
+
   }
   });
   
