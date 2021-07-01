@@ -18,10 +18,16 @@ async function start(client) {
   var chatSessions = [];
   var state = 0;
   var tanyaSessions =[];
+  var pertanyaan = []
 
   const unreadMessages = await client.getAllUnreadMessages();
+  //console.log(unreadMessages);
   var sender = Array.from(unreadMessages).map(i => i.from);
-  var unique = Array.from(new Set(sender)).filter(i => i !== '6283820341177@c.us');
+  var unique = Array.from(new Set(sender)).filter(function (result) {
+    return result !== "6283820341177@c.us" && result !== "6281225510541-1625125942@g.us" && result !== '6285769395132@c.us';
+  });
+
+  //console.log(unique);
 
   for(var i of unique){
     await client.sendText(i, `👋 Hai! Terima kasih telah menghubungi kami.
@@ -230,6 +236,20 @@ Ketik Angka 0️⃣ atau *!Menu* -> Menampilkan list perintah ini kembali
         `);
           break;
 
+      // case tanya
+        case '9':
+        case '!tanya':
+          state = 9;
+          if (tanyaSessions.includes(message.from) == false) {
+            await client.sendText(message.from, `Silahkan ketik pertanyaan Anda, dengan format :
+            *ID Pelanggan* :
+            *Nama Pelanggan* :
+            *Pertanyaan* :
+          `);
+            tanyaSessions.push(message.from);
+          }
+          break;
+
       //Info Tagihan Naik
         case "21":
         case "!tagihannaik":
@@ -245,28 +265,35 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
 
     //case tanya
     case 9: 
-      while (message.body.toLowerCase !== '!selesai'){
-        if (tanyaSessions.includes(message.from) == false) {
-          await client.sendText(message.from, `Silahkan ketik pertanyaan Anda, pertanyaan Anda akan kami segera kami jawab.
-        `);
-          tanyaSessions.push(message.from);
+      switch (message.body.toLowerCase()){
+        default:
+          if (tanyaSessions.includes(message.from) == false) {
+            await client.sendText(message.from, `Silahkan ketik pertanyaan Anda, dengan format :
+*ID Pelanggan* :
+*Nama Pelanggan* :
+*Pertanyaan* :
+          `);
+            tanyaSessions.push(message.from);
+
+            await client.sendText(message.from, 'ketik _*!Selesai*_ untuk mengakhiri pesan Anda');
+          }
         
-          await client.sendText(message.from, 'ketik !Selesai untuk mengakhiri pesan Anda');
-        }
-      //client.onMessage( message => {
-        client.forwardMessages('6281225510541@c.us', message.body);
-
-        state = 9;
+        await client.sendText(message.from, 'ketik _*!Selesai*_ untuk mengakhiri pesan Anda');
+        
+        pertanyaan.push(message.id);
         break;
-      //});
-      //}
-      }
-        client.sendText(message.from, `Terima kasih telah menghubungi kami, pertanyaan Anda akan segera kami jawab.
-     `);
-
-      state = 0;
-      break;
       
+        case "!selesai":
+      //console.log(pertanyaan);
+        //pertanyaan.splice(0,1);
+        console.log(pertanyaan);
+        await client.forwardMessages('6281225510541-1625125942@g.us', pertanyaan);
+        client.sendText(message.from, `Terima kasih telah menghubungi kami, pertanyaan Anda akan segera kami jawab.
+        `);
+        state = 0;
+        break;
+
+    }
   
   // close state switch
       }
