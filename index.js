@@ -17,6 +17,7 @@ wa.create({
 async function start(client) {
   var chatSessions = [];
   var state = 0;
+  var tanyaSessions =[];
 
   const unreadMessages = await client.getAllUnreadMessages();
   var sender = Array.from(unreadMessages).map(i => i.from);
@@ -220,8 +221,10 @@ Ketik Angka 2️⃣2️⃣ atau *!Siapa*  -> Siapa saja pelanggan yang dikenakan
 Ketik Angka 2️⃣3️⃣ atau *!UntukApa*  -> Digunakan untuk apa dana Jaminan Pembayaran tersebut?
 Ketik Angka 2️⃣4️⃣ atau *!Berapa*  -> Berapa nilai Jaminan Pembayaran yang harus dibayar Pelanggan?
 Ketik Angka 2️⃣5️⃣ atau *!Manfaat* -> Apa manfaat Jaminan Pembayaran bagi Pelanggan?
+
+Apabila ada pertanyaan lainnya silahkan Ketik Angka 9️⃣ atau *!Tanya* untuk mengetik pertanyaan.
         
-*_Untuk pertanyaan dan keluhan lainnya silahkan menghubungi contact center PGN di 1500-645_*
+*_Anda dapat juga menghubungi contact center PGN di 1500-645_*
         
 Ketik Angka 0️⃣ atau *!Menu* -> Menampilkan list perintah ini kembali
         `);
@@ -241,13 +244,20 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
       
 
     //case tanya
-    case 9:
+    case 9: 
       while (message.body.toLowerCase !== '!selesai'){
-        await client.sendText(message.from, `Silahkan ketik pertanyaan Anda, pertanyaan Anda akan kami segera kami jawab.
+        if (tanyaSessions.includes(message.from) == false) {
+          await client.sendText(message.from, `Silahkan ketik pertanyaan Anda, pertanyaan Anda akan kami segera kami jawab.
         `);
-        client.sendText(message.from, 'ketik !Selesai untuk mengakhiri pesan Anda');
+          tanyaSessions.push(message.from);
+        
+          await client.sendText(message.from, 'ketik !Selesai untuk mengakhiri pesan Anda');
+        }
       //client.onMessage( message => {
         client.forwardMessages('6281225510541@c.us', message.body);
+
+        state = 9;
+        break;
       //});
       //}
       }
