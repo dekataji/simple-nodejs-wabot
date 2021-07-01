@@ -19,11 +19,11 @@ async function start(client) {
   var state = 0;
 
   const unreadMessages = await client.getAllUnreadMessages();
-  var sender = Array.from(new Set(unreadMessages));
+  var sender = Array.from(unreadMessages).map(i => i.from);
   var unique = Array.from(new Set(sender)).filter(i => i !== '6283820341177@c.us');
 
   for(var i of unique){
-    await client.sendText(i.from, `👋 Hai! Terima kasih telah menghubungi kami.
+    await client.sendText(i, `👋 Hai! Terima kasih telah menghubungi kami.
 
 Silahkan ketik Angka 0️⃣ atau *!Menu* untuk menampilkan list perintah
     `);
