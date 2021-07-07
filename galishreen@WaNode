@@ -1,7 +1,6 @@
 // import { create, Client } from '@open-wa/wa-automate';
 const wa = require('@open-wa/wa-automate');
-const fs = require('fs');
-const mime = require('mime-types');
+const fs = require('fs')
 var nodeCleanup = require('node-cleanup');
 var fork = require('child_process').fork;
 
@@ -12,8 +11,7 @@ var fork = require('child_process').fork;
 
 
 wa.create({
-  useChrome: true,
-
+  useChrome: true
 }).then(client => start(client));
 
 async function start(client) {
@@ -34,7 +32,7 @@ async function start(client) {
   for(var i of unique){
     await client.sendText(i, `👋 Hai! Terima kasih telah menghubungi kami.
 
-Silahkan sampaikan kembali pesan Anda atau ketik Angka 0️⃣ atau *!Menu* untuk menampilkan list perintah
+Silahkan ketik Angka 0️⃣ atau *!Menu* untuk menampilkan list perintah
     `);
     
   }
@@ -42,19 +40,11 @@ Silahkan sampaikan kembali pesan Anda atau ketik Angka 0️⃣ atau *!Menu* untu
 client.onMessage(async message => {
   while(message.from !== '6283820341177@c.us')
   {
-    var imageBase64 = "";
-    if(message.mimetype){
-      const filename = `${message.t}.${mime.extension(message.mimetype)}`;
-      const mediaData = await wa.decryptMedia(message);
-      imageBase64 = `data:${message.mimetype};base64,${mediaData.toString(
-        'base64'
-      )}`;
-    }
     const cmm_pattern = new RegExp('([0-9]{9})#([0-9]+)');
     var cekCMM = "";
     if(message.type == "image"){
       cekCMM = String(message.caption).match(cmm_pattern);
-    } else if(message.type =="chat"){
+    } else {
       cekCMM = String(message.body).match(cmm_pattern);
     }
   
@@ -63,19 +53,12 @@ client.onMessage(async message => {
       case 0:
       if(cekCMM != null){
         await client.sendText(message.from,`
-⚠️ *Sepertinya anda mengirimkan data Catat Meter Mandiri (CMM)*
-Silahkan anda kirimkan kembali CMM Anda ke nomor Catat Meter Mandiri PGN Pusat.
-*------------------------------------------------------------*
-_Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nomor CMM PGN Pusat. *083820341177*_
-*------------------------------------------------------------*
+Sepertinya anda mengirimkan data Catat Meter Mandiri.
+Silahkan anda kirimkan kembali CMM Anda ke nomor CMM PGN Pusat. *083820341177*
       `);
-        await client.sendContact(message.from, '6283820341177@c.us');
-        try {
-          await client.sendImage('6283820341177@c.us',imageBase64,"cmm",message.caption);
-        } catch{
-          console.log('err');
-        }
-        state = 0;
+        client.sendContact(message.from, '6283820341177@c.us');
+        client.forwardMessages('6283820341177@c.us',message.id);
+        state = 1;
         break;
       
 }
@@ -277,7 +260,6 @@ Ketik Angka 0️⃣ atau *!Menu* -> Menampilkan list perintah ini kembali
           await client.sendText(message.from,`*Kenapa tagihan gas sekarang naik?*
 Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya adalah biaya Jaminan Pembayaran.
         `);
-          state = 0;
           break;
     //close message switch
     }
