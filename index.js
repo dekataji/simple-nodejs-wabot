@@ -4,35 +4,21 @@ const fs = require('fs');
 const mime = require('mime-types');
 var nodeCleanup = require('node-cleanup');
 var fork = require('child_process').fork;
-var csv = require('csv-parser');
-const fastcsv = require('fast-csv');
+const parser = require('csv-parser');
+var stringify = require('csv-stringify');
+const stripBom = require('strip-bom-stream');
+const stream = require('stream')
 
+var capel = [];
+var phones = [];
 
-var data = fs.readFileSync('contacts.csv');
-var stringData=data.toString();
-
-//console.log(stringData);
-var arrayOne= stringData.split('\r\n');
-var header=arrayOne[0].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-var noOfRow=arrayOne.length;
-var noOfCol=header.length;
-
-var capel=[];
-
-var i=0,j=0;
-for (i = 1; i < noOfRow; i++) {
-
-    var obj = {};
-    var myNewLine=arrayOne[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-
-    for (j = 0; j< noOfCol; j++) {
-        var headerText = header[j];
-        var valueText = myNewLine[j];
-        obj[headerText] = valueText;
-    };
-    capel.push(obj);
-};
-console.log(capel);
+fs.createReadStream('contacts.csv')
+  .pipe(parser())
+  .on('data', (data) => capel.push(data))
+  .on('end', () => {
+    phones = capel.map(({ Mobile }) => Mobile);
+    console.log(phones);
+  });
 
 function updater(prop, value){
   for (var i in capel){
@@ -43,7 +29,6 @@ function updater(prop, value){
   }
 }
 
-var phones = capel.map(({ Mobile }) => Mobile);
 
 
 wa.create({
@@ -125,12 +110,11 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
   
 
 function writeCsv(data) {
-  const ws = fs.createWriteStream('contacts.csv', { flags: 'w+'});
-  fastcsv
-    .write(data, {headers:true})
-    .pipe(ws)
-  this.end();
-    
+  stringify(data, {
+    header: true
+}, function (err, output) {
+    fs.writeFileSync('contacts.csv', output);
+})
 }
 
   for(var i in capel){
