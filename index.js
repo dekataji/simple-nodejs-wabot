@@ -29,6 +29,14 @@ function updater(prop, value){
   }
 }
 
+function writeCsv(data) {
+  stringify(data, {
+    header: true
+}, function (err, output) {
+    fs.writeFileSync('contacts.csv', output);
+})
+}
+
 
 
 wa.create({
@@ -42,22 +50,15 @@ async function start(client) {
   var tanyaSessions =[];
   var pertanyaan = []
 
+  /** Get unread Messages */
   const unreadMessages = await client.getAllUnreadMessages();
-  //console.log(unreadMessages);
   var sender = Array.from(unreadMessages).map(i =>[i.from, i]);
   var unique = Array.from(new Set(sender)).filter(function (result) {
     return result[0] !== "6283820341177@c.us" && result[0] !== '6285769395132@c.us' && result[0] !== '6281278256401@c.us';
   });
-
-  //console.log(unique);
-
-/** Cek CMM 
+/** Begin Filter Unique Loop*/
   for(var i of unique){
-    //await client.sendText(i[0], `👋 Hai! Terima kasih telah menghubungi kami.
-//Silahkan sampaikan kembali pesan Anda.
-   // `);
-    
-    
+   /** Cek CMM */
     var imageBase64 = "";
     if(i[1].mimetype){
       const filename = `${i[1].t}.${mime.extension(i[1].mimetype)}`;
@@ -105,17 +106,20 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
       console.log('error kirim kontak');
     }
   }
-}
   /** End of CekCMM */
-  
 
-function writeCsv(data) {
-  stringify(data, {
-    header: true
-}, function (err, output) {
-    fs.writeFileSync('contacts.csv', output);
-})
+  /** Begin Cek Capel 2021 */
+  if(phones.includes((i[1].from).substring(0,(i[1].from).length - 5))){
+    for (var j in capel){
+      if (capel[j].Mobile == (i[1].from).substring(0,(i[1].from).length - 5)){
+        capel[j].Reply += `{${i[1].body}} `;
+        writeCsv(capel);
+      }
+    }
+  }
+  /** End Of Cek Capel */
 }
+/** End Loop */
 
   for(var i in capel){
     if (capel[i].Sent == 'FALSE'){
@@ -136,7 +140,7 @@ function writeCsv(data) {
 
   
 client.onMessage(async message => {
-  console.log((message.from).substring(0,(message.from).length - 5));
+  //console.log((message.from).substring(0,(message.from).length - 5));
   while(message.from !== '6283820341177@c.us')
   {
     var imageBase64 = "";
