@@ -140,17 +140,13 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
     if (capel[i].Sent == 'FALSE'){
       try{
       client.sendText(`${capel[i].Mobile}@c.us`, pesan);
-
-      if ((client.getMyLastMessage(`${capel[i].Mobile}@c.us`)).body == pesan){
         capel[i].Sent = 'TRUE';
         console.log(`Message Sent to ${capel[i].Nama}`);
         writeCsv(capel);
-      }
-      
-    
-    } catch {
+      }catch {
       console.log("error");
     }
+  
     }
   }
   
