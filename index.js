@@ -4,11 +4,46 @@ const fs = require('fs');
 const mime = require('mime-types');
 var nodeCleanup = require('node-cleanup');
 var fork = require('child_process').fork;
+var csv = require('csv-parser');
+const fastcsv = require('fast-csv');
 
-//const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-//TODO:
-//
+var data = fs.readFileSync('contacts.csv');
+var stringData=data.toString();
+
+//console.log(stringData);
+var arrayOne= stringData.split('\r\n');
+var header=arrayOne[0].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+var noOfRow=arrayOne.length;
+var noOfCol=header.length;
+
+var capel=[];
+
+var i=0,j=0;
+for (i = 1; i < noOfRow; i++) {
+
+    var obj = {};
+    var myNewLine=arrayOne[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+
+    for (j = 0; j< noOfCol; j++) {
+        var headerText = header[j];
+        var valueText = myNewLine[j];
+        obj[headerText] = valueText;
+    };
+    capel.push(obj);
+};
+console.log(capel);
+
+function updater(prop, value){
+  for (var i in capel){
+    if (capel[i].prop == prop){
+      capel[i].value = value;
+      break
+    }
+  }
+}
+
+var phones = capel.map(({ Mobile }) => Mobile);
 
 
 wa.create({
@@ -24,22 +59,100 @@ async function start(client) {
 
   const unreadMessages = await client.getAllUnreadMessages();
   //console.log(unreadMessages);
-  var sender = Array.from(unreadMessages).map(i => i.from);
+  var sender = Array.from(unreadMessages).map(i =>[i.from, i]);
   var unique = Array.from(new Set(sender)).filter(function (result) {
-    return result !== "6283820341177@c.us" && result !== "6281225510541-1625125942@g.us" && result !== '6285769395132@c.us';
+    return result[0] !== "6283820341177@c.us" && result[0] !== '6285769395132@c.us' && result[0] !== '6281278256401@c.us';
   });
 
   //console.log(unique);
 
+/** Cek CMM 
   for(var i of unique){
-    await client.sendText(i, `👋 Hai! Terima kasih telah menghubungi kami.
+    //await client.sendText(i[0], `👋 Hai! Terima kasih telah menghubungi kami.
+//Silahkan sampaikan kembali pesan Anda.
+   // `);
+    
+    
+    var imageBase64 = "";
+    if(i[1].mimetype){
+      const filename = `${i[1].t}.${mime.extension(i[1].mimetype)}`;
+      const mediaData = await wa.decryptMedia(i[1]);
+      imageBase64 = `data:${i[1].mimetype};base64,${mediaData.toString(
+        'base64'
+      )}`;
+    }
+    const cmm_pattern = new RegExp('([0-9]{3,})\s?-?([0-9]{3,})?\s?-?([0-9]{3,})?#([0-9]+)');
+    const cmm_pattern_image = new RegExp('([0-9]{3,})\s?-?([0-9]{3,})?\s?-?([0-9]{3,})?#?([0-9]+)');
+    var cekCMM = "";
+    if(i[1].type == "image"){
+      cekCMM = String(i[1].caption).match(cmm_pattern_image);
+    } else if(i[1].type =="chat"){
+      cekCMM = String(i[1].body).match(cmm_pattern);
+    }
 
-Silahkan sampaikan kembali pesan Anda atau ketik Angka 0️⃣ atau *!Menu* untuk menampilkan list perintah
+    if(cekCMM != null){
+      console.log(`CMM found! from ${i[0]}`);
+      await client.sendText(i[0],`
+⚠️ *Sepertinya anda mengirimkan data Catat Meter Mandiri (CMM)*
+Silahkan anda kirimkan kembali CMM Anda ke nomor Catat Meter Mandiri PGN Pusat.
+*------------------------------------------------------------*
+_Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nomor CMM PGN Pusat: *083820341177*_
+*------------------------------------------------------------*
     `);
     
+    try {
+      if(i[1].type == "image"){
+      await client.sendImage('6283820341177@c.us',imageBase64,"cmm",i[1].caption);
+      console.log(`image from ${i[1].from} has been forwarded`);
+      } else {
+        console.log(`Cannot fwd message from ${i[1].from}, message is a text not a media`);
+      }
+
+    } catch(error){
+      console.error(error);
+    }
+     
+    try{
+      await client.sendContact(i[1].from, '6283820341177@c.us');
+      //await client.sendText(i[0], 'Klik link berikut untuk langsung terhubung dengan WA Catat Meter Pusat PGN -> https://wa.link/afbymx');
+      
+    } catch(error){
+      console.log('error kirim kontak');
+    }
+  }
+}
+  /** End of CekCMM */
+  
+
+function writeCsv(data) {
+  const ws = fs.createWriteStream('contacts.csv', { flags: 'w+'});
+  fastcsv
+    .write(data, {headers:true})
+    .pipe(ws)
+  this.end();
+    
+}
+
+  for(var i in capel){
+    if (capel[i].Sent == 'FALSE'){
+      try{
+      client.sendText(`${capel[i].Mobile}@c.us`, "Pesan");
+      capel[i].Sent = 'TRUE';
+      console.log(`Message Sent to ${capel[i].Nama}`);
+      writeCsv(capel);
+    
+    } catch {
+      console.log("error");
+    }
+    }
   }
   
+  console.log(capel);
+
+
+  
 client.onMessage(async message => {
+  console.log((message.from).substring(0,(message.from).length - 5));
   while(message.from !== '6283820341177@c.us')
   {
     var imageBase64 = "";
@@ -50,10 +163,11 @@ client.onMessage(async message => {
         'base64'
       )}`;
     }
-    const cmm_pattern = new RegExp('([0-9]{9})#([0-9]+)');
+    const cmm_pattern = new RegExp('([0-9]{3,})\s?-?([0-9]{3,})?\s?-?([0-9]{3,})?#([0-9]+)');
+    const cmm_pattern_image = new RegExp('([0-9]{3,})\s?-?([0-9]{3,})?\s?-?([0-9]{3,})?#?([0-9]+)');
     var cekCMM = "";
     if(message.type == "image"){
-      cekCMM = String(message.caption).match(cmm_pattern);
+      cekCMM = String(message.caption).match(cmm_pattern_image);
     } else if(message.type =="chat"){
       cekCMM = String(message.body).match(cmm_pattern);
     }
@@ -62,6 +176,7 @@ client.onMessage(async message => {
 
       case 0:
       if(cekCMM != null){
+        console.log(`CMM found! from ${message.from}`);
         await client.sendText(message.from,`
 ⚠️ *Sepertinya anda mengirimkan data Catat Meter Mandiri (CMM)*
 Silahkan anda kirimkan kembali CMM Anda ke nomor Catat Meter Mandiri PGN Pusat.
@@ -69,16 +184,50 @@ Silahkan anda kirimkan kembali CMM Anda ke nomor Catat Meter Mandiri PGN Pusat.
 _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nomor CMM PGN Pusat. *083820341177*_
 *------------------------------------------------------------*
       `);
-        await client.sendContact(message.from, '6283820341177@c.us');
-        try {
-          await client.sendImage('6283820341177@c.us',imageBase64,"cmm",message.caption);
-        } catch{
-          console.log('err');
+      try {
+        if(message.type == "image"){
+        await client.sendImage('6283820341177@c.us',imageBase64,"cmm",message.caption);
+        console.log(`image from ${message.from} has been forwarded`)
+        } else {
+          console.log(`Cannot fwd message from ${message.from}, message is a text not a media`);
         }
-        state = 0;
-        break;
+
+      } catch(error){
+        console.error(error);
+      }
       
+      try{
+        await client.sendContact(message.from, '6283820341177@c.us');
+        //await client.sendText(i[0], 'Klik link berikut untuk langsung terhubung dengan WA Catat Meter Pusat PGN -> https://wa.link/afbymx');
+        
+      } catch(error){
+        console.log('error kirim kontak');
+      }
+     
+      
+  }
 }
+  //while break
+  break;
+}
+  if (phones.includes((message.from).substring(0,(message.from).length - 5))){
+    for (var i in capel){
+      if (capel[i].Mobile == (message.from).substring(0,(message.from).length - 5)){
+        capel[i].Reply += `{${message.body}} `;
+        writeCsv(capel);
+      }
+    }
+    console.log(capel);
+  }
+  
+
+  if(message.from == '6283820341177@c.us'){
+    console.log(`Reply from CMM : ${message.body}`);
+  }
+});
+}
+  /** 
+
       if(chatSessions.includes(message.from) == false){
         await client.sendText(message.from, `👋 Hai! Terima kasih atas kepercayaan Anda menjadi pelanggan setia PGN.
      `);
@@ -323,7 +472,7 @@ Kenaikan tagihan gas pelanggan bisa diakibatkan oleh beberapa hal, salah satunya
     }
   });
 }
-
+*/
 
 //nodeCleanup(function (exitCode, signal) {
 //    if (child !== null && signal === 'SIGINT')
