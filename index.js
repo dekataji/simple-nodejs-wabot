@@ -12,7 +12,23 @@ const stream = require('stream')
 var capel = [];
 var phones = [];
 
-fs.createReadStream('contacts.csv')
+const pesan = `Yth Calon Pelanggan PGN, 
+
+Terima kasih atas keminatan Anda untuk menjadi pelanggan Energi Baik PGN.
+Bersama dengan pesan ini, kami sampaikan bahwa Anda sudah terdaftar menjadi Calon Pelanggan GasKita Pintar Rumah Tangga (GPiR) berdasarkan kriteria daya listrik terpasang di atas 900VA.
+Adapun produk yang dapat Anda nikmati nanti sebagai berikut:
+- Gas Alam yang mengalir 24 jam dengan tarif Rp 10.000/m3 dengan jangkauan pemakaian 4-50 m3 per bulannya
+- Pemasangan Pipa Instalasi *Gratis* sepanjang 15 meter
+- Konversi kompor elpiji 2 tungku *Gratis*
+- Asuransi atas kebakaran akibat kebocoran gas alam dengan nilai tanggunan hingga Rp 30 jt
+- 1 kali inspeksi pipa instalasi *Gratis* selama 1 Tahun pertama
+Manfaat tersebut dapat anda nikmati dengan menyediakan Jaminan Berlangganan sebesar Rp 300.000 sebagai dana talangan agar anda terhindar dari Denda akibat terlambat melakukan pembayaran, dan dapat dicairkan apabila Anda berhenti berlangganan gas.
+
+Tunggu apa lagi? Silahkan jawab _*Setuju*_ apabila Anda berkenan menjadi pelanggan Energi Baik PGN atau _*Batal*_  jika anda tidak berkenan, dengan me- _reply_ pesan WA ini.
+
+_Apabila tidak ada jawaban dalam 3x24 jam setelah pesan ini dikirimkan maka kami anggap setuju dengan ketentuan kami di atas_`
+
+fs.createReadStream(__dirname+'/contacts.csv')
   .pipe(parser())
   .on('data', (data) => capel.push(data))
   .on('end', () => {
@@ -33,10 +49,9 @@ function writeCsv(data) {
   stringify(data, {
     header: true
 }, function (err, output) {
-    fs.writeFileSync('contacts.csv', output);
+    fs.writeFileSync(__dirname+'/contacts.csv', output);
 })
 }
-
 
 
 wa.create({
@@ -72,7 +87,7 @@ async function start(client) {
     var cekCMM = "";
     if(i[1].type == "image"){
       cekCMM = String(i[1].caption).match(cmm_pattern_image);
-    } else if(i[1].type =="chat"){
+    } else if(i[1].type == "chat"){
       cekCMM = String(i[1].body).match(cmm_pattern);
     }
 
@@ -124,7 +139,7 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
   for(var i in capel){
     if (capel[i].Sent == 'FALSE'){
       try{
-      client.sendText(`${capel[i].Mobile}@c.us`, "Pesan");
+      client.sendText(`${capel[i].Mobile}@c.us`, pesan);
       capel[i].Sent = 'TRUE';
       console.log(`Message Sent to ${capel[i].Nama}`);
       writeCsv(capel);
