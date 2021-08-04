@@ -127,7 +127,10 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
   if(phones.includes((i[1].from).substring(0,(i[1].from).length - 5))){
     for (var j in capel){
       if (capel[j].Mobile == (i[1].from).substring(0,(i[1].from).length - 5)){
-        capel[j].Reply += `{${i[1].body}} `;
+        var replyHistory = capel[j].Reply.split(/[{}]+/).filter(function(e) { return e; });
+        if(!(replyHistory.includes(i[1].body))){
+          capel[j].Reply += `{${i[1].body}}`;
+        }
         writeCsv(capel);
       }
     }
@@ -139,7 +142,7 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
   for(var i in capel){
     if (capel[i].Sent == 'FALSE'){
       try{
-      client.sendText(`${capel[i].Mobile}@c.us`, pesan);
+        client.sendText(`${capel[i].Mobile}@c.us`, pesan);
         capel[i].Sent = 'TRUE';
         console.log(`Message Sent to ${capel[i].Nama}`);
         writeCsv(capel);
@@ -216,7 +219,7 @@ _Untuk selanjutnya, Pengiriman data Catat Meter Mandiri mohon disampaikan ke Nom
   if (phones.includes((message.from).substring(0,(message.from).length - 5))){
     for (var i in capel){
       if (capel[i].Mobile == (message.from).substring(0,(message.from).length - 5)){
-        capel[i].Reply += `{${message.body}} `;
+        capel[i].Reply += `{${message.body}}`;
         writeCsv(capel);
       }
     }
